@@ -1,0 +1,36 @@
+{
+  "name": "azure-nsg-ban-ips",
+  "version": "0.2.0",
+  "description": "Block malicious IPs for some days, perfect for Azure Kubernetes (AKS)",
+  "author": "ma-ha",
+  "license": "MIT",
+  "main": "azure-nsg-ban-ips.js",
+  "keywords": [
+    "Azure",
+    "NSG",
+    "Network Security Group",
+    "ban",
+    "block",
+    "ip",
+    "malicious",
+    "k8s",
+    "kubernetes",
+    "AKS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ma-ha/azure-nsg-ban-ips.git"
+  },
+  "dependencies": {
+    "azure-arm-network": "^13.0.0",
+    "ms-rest-azure": "^3.0.0"
+  },
+  "files": [
+    "README.md",
+    "azure-nsg-ban-ips.js"
+  ],
+  "engines": {
+    "node": "^13.10.0",
+    "npm": "^6.13.0"
+  }
+}
