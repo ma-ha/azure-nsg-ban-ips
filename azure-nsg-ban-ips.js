@@ -12,8 +12,6 @@ module.exports = {
   creNSGrules,
 }
 
-let cred    = null
-let sub     = null
 let rg      = null
 let nsg     = null
 let client  = null
@@ -201,6 +199,6 @@ function getBlockedIPs( secyRuleName ) {
         }
       }
       resolve( [] )
-    } catch ( exc)
+    } catch ( exc)  { reject( exc ) }
   })
 }

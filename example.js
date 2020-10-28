@@ -1,5 +1,5 @@
-const nsg = require( 'azure-nsg-ban-ips' )
-// const nsg = require( './azure-nsg-ban-ips' )
+//const nsg = require( 'azure-nsg-ban-ips' )
+const nsg = require( './azure-nsg-ban-ips' )
 
 // change this:
 const aadId   = 'YOUR AAD ID (aka tenant id)'
