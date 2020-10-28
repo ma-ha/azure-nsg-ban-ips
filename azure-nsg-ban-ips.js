@@ -35,13 +35,11 @@ async function login( spId, spKey, aadId, subId, rgName, nsgName  ) {
     msRestNodeAuth.loginWithServicePrincipalSecret(
       spId, spKey, aadId,
       ( err, creds ) => {
-        if ( err ) { return reject() }
+        if ( err ) { return reject( err ) }
         client = new NetworkManagementClient( creds, subId )
         sub  = subId
         rg   = rgName
-        // cred = creds
         nsg  = nsgName
-        // console.log( creds )
         resolve( client )
       }
     )
