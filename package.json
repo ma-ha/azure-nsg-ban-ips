@@ -1,6 +1,6 @@
 {
   "name": "azure-nsg-ban-ips",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Block malicious IPs for some days, perfect for Azure Kubernetes (AKS)",
   "author": "ma-ha",
   "license": "MIT",
@@ -11,10 +11,15 @@
     "Network Security Group",
     "ban",
     "block",
+    "attacks",
+    "scripting kids",
+    "exploit",
     "ip",
     "malicious",
     "k8s",
-    "kubernetes",
+    "Kubernetes",
+    "NginX",
+    "Ingress Controller"
     "AKS"
   ],
   "repository": {
