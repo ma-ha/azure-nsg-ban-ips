@@ -70,7 +70,7 @@ async function addIpAddrArrToBlacklist( blacklistIpArr ) {
   return new Promise( async ( resolve, reject ) => {
     let now = new Date()
     // assemble generic NSG rule name
-    let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) 
+    let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) +
       ( now.getUTCDate() < 10 ? '0' : '' ) + now.getUTCDate()
     // prio must be uniqe
     let secRulePrio = 1000 + now.getUTCDay()
