@@ -1,8 +1,8 @@
 # azure-nsg-ban-ips
-Block malicious IPs for some days, perfect for Azure Kubernetes (AKS).a
+Block attacker IPs for some days, perfect for Azure Kubernetes (AKS).a
 
-This is much better than banning IPs in e.g. NGINX, 
-because attackers don't reach the infrastructure at all.
+This is much better than banning IPs e.g. in NGINX, 
+because attackers don't reach any services at all.
 
 Node.js: [npm package](https://www.npmjs.com/package/azure-nsg-ban-ips)
 
@@ -28,7 +28,7 @@ Details: see [example.js](example.js)
 There is a ready to use 
 - Node.js App
 - [Docker Container](https://hub.docker.com/r/mahade70/aks-nsg-ingress-ban-ip)
-- Kubernetes Pod
+- Kubernetes Pod (using the Docker container)
 here: https://github.com/ma-ha/aks-nsg-ingress-ban-ip
 
 This reads the NginX Ingress Controller logs, identify attacks and bans the IP addresses in the NSG.
@@ -58,8 +58,17 @@ Read and return all secuirity rules in the NSG:
 getNsgRules()
 ```
 
-# NSG rules
+# Behind the Scenes
 
-This package creates NSG security rules and use prio 1000...10365 (1000 + day).
+This package creates NSG security rules, for example for the NSG which comes with your AKS.
+
+About the rules:
+- one rule is created per day
+- rule names are `blacklistYYYYMMDD`, for example `blacklist20201108`
+- rules use prio 1000...10365 (1000 + day in year)
+- rule description field contains `created by blacklist job`
+
+The description is also used as a filter in the `cleanupOldBlacklists()` 
+to identify old blacklists to delete.
 
 If you need to set up whitelist rules, you should use a prio with e.g. 200.
