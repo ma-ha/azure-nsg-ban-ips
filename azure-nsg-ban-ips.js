@@ -4,12 +4,15 @@ const NetworkManagementClient = require('azure-arm-network')
 // const msRestNodeAuth = require( "@azure/ms-rest-nodeauth" )
 // const { NetworkManagementClient } = require( "@azure/arm-network" )
 
+var NSG_PRIO_BASE = 1000
+
 module.exports = {
   login,
   addIpAddrArrToBlacklist,
   cleanupOldBlacklists,
   getNsgRules,
   creNSGrules,
+  setNsgBasePrioConfig
 }
 
 let rg      = null
@@ -20,29 +23,32 @@ let client  = null
 
 async function login( spId, spKey, aadId, subId, rgName, nsgName  ) {
   return new Promise( async ( resolve, reject ) => {
-    // let creds = await msRestNodeAuth.loginWithServicePrincipalSecretWithAuthResponse( spId, spKey, aadId )
-    // client = new NetworkManagementClient( creds, subId ) //  <<<< fails -- why??
+    try {
 
-    // msRestNodeAuth.loginWithServicePrincipalSecretWithAuthResponse( spId, spKey, aadId )
-    // .then( (authres) => {
-    //   // console.dir( authres, { depth: null })
-    //   client = new NetworkManagementClient( authres, subId )
-    // }).catch( ( err ) => {
-    //   console.log( err )
-    // });
+      // let creds = await msRestNodeAuth.loginWithServicePrincipalSecretWithAuthResponse( spId, spKey, aadId )
+      // client = new NetworkManagementClient( creds, subId ) //  <<<< fails -- why??
 
+      // msRestNodeAuth.loginWithServicePrincipalSecretWithAuthResponse( spId, spKey, aadId )
+      // .then( (authres) => {
+      //   // console.dir( authres, { depth: null })
+      //   client = new NetworkManagementClient( authres, subId )
+      // }).catch( ( err ) => {
+      //   console.log( err )
+      // });
 
-    msRestNodeAuth.loginWithServicePrincipalSecret(
-      spId, spKey, aadId,
-      ( err, creds ) => {
-        if ( err ) { return reject( err ) }
-        client = new NetworkManagementClient( creds, subId )
-        sub  = subId
-        rg   = rgName
-        nsg  = nsgName
-        resolve( client )
-      }
-    )
+      msRestNodeAuth.loginWithServicePrincipalSecret(
+        spId, spKey, aadId,
+        ( err, creds ) => {
+          if ( err ) { return reject( err ) }
+          client = new NetworkManagementClient( creds, subId )
+          sub  = subId
+          rg   = rgName
+          nsg  = nsgName
+          resolve( client )
+        }
+      )
+
+    } catch ( exc ) { reject( exc ) }
   })
 }
 
@@ -68,23 +74,29 @@ async function getNsgRules( ) {
 
 async function addIpAddrArrToBlacklist( blacklistIpArr ) {
   return new Promise( async ( resolve, reject ) => {
-    let now = new Date()
-    // assemble generic NSG rule name
-    let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) +
-      ( now.getUTCDate() < 10 ? '0' : '' ) + now.getUTCDate()
-    // prio must be uniqe
-    let secRulePrio = 1000 + now.getUTCDay()
+    try {
+      let now = new Date()
+      // assemble generic NSG rule name
+      let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) +
+        ( now.getUTCDate() < 10 ? '0' : '' ) + now.getUTCDate()
+      // prio must be uniqe
+      let secRulePrio = NSG_PRIO_BASE + now.getUTCDay()
 
-    // cre list of IPs to block
-    let otherBlacklistIPs = await getBlockedIPs( secRuleName )
-    let blacklistIPs = uniqueMerge( blacklistIpArr, otherBlacklistIPs )
+      // cre list of IPs to block
+      let otherBlacklistIPs = await getBlockedIPs( secRuleName )
+      let blacklistIPs = uniqueMerge( blacklistIpArr, otherBlacklistIPs )
 
-    // update NSG blacklists
-    if ( blacklistIPs.length > 0 ) {
-      await creNSGrules( secRuleName, secRulePrio, blacklistIPs )
-    }
-    resolve( blacklistIPs )
+      // update NSG blacklists
+      if ( blacklistIPs.length > 0 ) {
+        await creNSGrules( secRuleName, secRulePrio, blacklistIPs )
+      }
+      resolve( blacklistIPs )
+    } catch ( exc ) { reject( exc ) }
   })
+}
+
+function setNsgBasePrioConfig( newBasePrio ) {
+  NSG_PRIO_BASE = newBasePrio
 }
 
 // ============================================================================

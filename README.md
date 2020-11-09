@@ -57,6 +57,11 @@ Read and return all secuirity rules in the NSG:
 ```javascript
 getNsgRules()
 ```
+Set the base prio number for blacklist rules, e.g.
+```javascript
+
+setNsgBasePrioConfig( 10000 )
+```
 
 # Behind the Scenes
 
@@ -65,7 +70,7 @@ This package creates NSG security rules, for example for the NSG which comes wit
 About the rules:
 - one rule is created per day
 - rule names are `blacklistYYYYMMDD`, for example `blacklist20201108`
-- rules use prio 1000...10365 (1000 + day in year)
+- rules use prio 1000...1365 (1000 + day in year)
 - rule description field contains `created by blacklist job`
 
 The description is also used as a filter in the `cleanupOldBlacklists()` 
