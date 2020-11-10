@@ -142,12 +142,14 @@ async function cleanupOldBlacklists( retentionDays = 2 ) {
   return new Promise( async ( resolve, reject ) => {
     try {
       let fwRules = await getNsgRules( )
+      let now = new Date()
 
       let keepRules = []
       for ( let day = 0; day < retentionDays; day++ ){
         let keepDay = new Date( Date.now() - day*24*60*60*1000 )
-        keepRules.push( 'blacklist' + keepDay.getUTCFullYear() +
-                        keepDay.getUTCMonth() + 1 + keepDay.getUTCDate() )
+        let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) +
+          ( now.getUTCDate() < 10 ? '0' : '' ) + now.getUTCDate()
+        keepRules.push( secRuleName )
       }
 
       // console.log( 'keep', keepRules )
