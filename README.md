@@ -60,7 +60,7 @@ getNsgRules()
 Set the base prio number for blacklist rules, e.g.
 ```javascript
 
-setNsgBasePrioConfig( 10000 )
+setNsgBasePrioConfig( 1234 )
 ```
 
 # Behind the Scenes
