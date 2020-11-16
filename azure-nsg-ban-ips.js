@@ -147,8 +147,8 @@ async function cleanupOldBlacklists( retentionDays = 2 ) {
       let keepRules = []
       for ( let day = 0; day < retentionDays; day++ ){
         let keepDay = new Date( Date.now() - day*24*60*60*1000 )
-        let secRuleName = 'blacklist' + now.getUTCFullYear() + (now.getUTCMonth() + 1) +
-          ( now.getUTCDate() < 10 ? '0' : '' ) + now.getUTCDate()
+        let secRuleName = 'blacklist' + keepDay.getUTCFullYear() + (keepDay.getUTCMonth() + 1) +
+          ( keepDay.getUTCDate() < 10 ? '0' : '' ) + keepDay.getUTCDate()
         keepRules.push( secRuleName )
       }
 
